@@ -1,0 +1,2 @@
+[clipduration]=10
+[fps]=30
