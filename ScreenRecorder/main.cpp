@@ -9,7 +9,6 @@
 #include "curl/curl.h"
 #include <openssl/hmac.h>
 #include <openssl/evp.h>
-#include <sstream>
 #include <fstream>
 #include <map>
 using namespace std;
@@ -179,7 +178,7 @@ void capture(int startX, int startY, int endX, int endY)
     string videoName = "vid.mp4";
     wstring wVideoName = L"vid.mp4";
     VideoWriter writer(videoName,
-        VideoWriter::fourcc('M', 'P', '4', 'V'),
+        VideoWriter::fourcc('H', '2', '6', '4'),
         FPS, Size(screenX, screenY));
     
 
