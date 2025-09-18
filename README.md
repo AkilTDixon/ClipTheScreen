@@ -10,7 +10,6 @@ https://github.com/user-attachments/assets/aac5846a-3968-43f3-abb5-20552059109c
 - **Interactive Screen Selection**: Click and drag to select any rectangular area of your screen
 - **Multi-Monitor Support**: Works across multiple joined monitors
 - **Configurable Recording Settings**: Customize FPS and recording duration via configuration file
-- **Real-time Preview**: Visual feedback during area selection with overlay
 - **Automatic Playback**: Automatically opens the recorded video after completion
 - **High Performance**: Optimized screen capture using Windows GDI and OpenCV
 
