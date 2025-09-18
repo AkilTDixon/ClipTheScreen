@@ -34,7 +34,7 @@ The application uses a `config.txt` file to control recording parameters:
 
 - **`[clipduration]`**: Recording duration in seconds (default: 10)
 - **`[fps]`**: Frames per second for the recording (default: 30)
-- **`[outputpath]`**: Directory where videos are saved (default: local directory of .exe)
+- **`[outputpath]`**: Directory where videos are saved (default: local directory of .exe) (custom path must end with `\`)
 
 ## Requirements
 
