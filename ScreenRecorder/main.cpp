@@ -11,6 +11,7 @@
 #include <openssl/evp.h>
 #include <fstream>
 #include <map>
+#include "Window.h"
 using namespace std;
 using namespace cv;
 
@@ -18,7 +19,7 @@ using namespace cv;
 int main();
 bool holding = false;
 POINT p, startP, endP;
-void capture(int startX, int startY, int endX, int endY);
+void capture(int startX, int startY, int endX, int endY, Window* timeWindow);
 
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -73,23 +74,32 @@ int main() {
 
 
 
-    HWND window = NULL;
-    WNDCLASS wc = {};
-    wc.lpfnWndProc = WndProc;
-    wc.hInstance = GetModuleHandle(NULL);
-    wc.lpszClassName = L"CursorOverlay";
-    RegisterClass(&wc);
+    Window wdo(L"CursorOverlay", WndProc, L"Overlay", WS_POPUP, 0, 0, GetSystemMetrics(SM_CXVIRTUALSCREEN), GetSystemMetrics(SM_CYVIRTUALSCREEN));
     MSG msg;
+    //HWND window = NULL;
+    //WNDCLASS wc = {};
+    //wc.lpfnWndProc = WndProc;
+    //wc.hInstance = GetModuleHandle(NULL);
+    //wc.lpszClassName = L"CursorOverlay";
+    //RegisterClass(&wc);
+    
 
-    window = CreateWindowEx(
-        WS_EX_TOPMOST | WS_EX_LAYERED,
-        wc.lpszClassName, L"Overlay",
-        WS_POPUP, 0, 0, GetSystemMetrics(SM_CXVIRTUALSCREEN), GetSystemMetrics(SM_CYVIRTUALSCREEN),
-        NULL, NULL, wc.hInstance, NULL
-    );
+    //window = CreateWindowEx(
+    //    WS_EX_TOPMOST | WS_EX_LAYERED,
+    //    wc.lpszClassName, 
+    //    L"Overlay",
+    //    WS_POPUP, 
+    //    0, 
+    //    0, 
+    //    GetSystemMetrics(SM_CXVIRTUALSCREEN), 
+    //    GetSystemMetrics(SM_CYVIRTUALSCREEN),
+    //    NULL, 
+    //    NULL, 
+    //    wc.hInstance, 
+    //    NULL
+    //);
 
-    SetLayeredWindowAttributes(window, RGB(0,0,0), 128, LWA_ALPHA);
-    ShowWindow(window, SW_SHOW);
+    
     
 
     while (true)
@@ -111,31 +121,33 @@ int main() {
         else
         {
             if (holding) {
-                endP = p;                
-                if (window)
-                    DestroyWindow(window);
-                
+                endP = p;              
+                wdo.~Window();
+
                 break;
             }
         }
         
     }
-
     destroyAllWindows();
-    capture(startP.x, startP.y, endP.x, endP.y);
+    Window t(L"timer", WindowProc, L"Duration", WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, endP.x, endP.y, 50, 52);
+    capture(startP.x, startP.y, endP.x, endP.y, &t);
+    t.~Window();
     return 0;
 }
 
 
 
 
-void capture(int startX, int startY, int endX, int endY)
+void capture(int startX, int startY, int endX, int endY, Window* timeWindow)
 {
     map<string, int> config;
     int FPS = 30;
     int clipDuration = 10;
     ifstream f;
     string line;
+
+
     f.open("config.txt");
     while (getline(f, line))
     {
@@ -147,7 +159,9 @@ void capture(int startX, int startY, int endX, int endY)
     f.close();
     FPS = config["[fps]"];
     clipDuration = config["[clipduration]"];
-    
+    if (clipDuration < 1 || FPS < 1)
+        return;
+
 
     HWND hwnd = GetDesktopWindow();
     HDC hdcScreen = GetDC(hwnd);
@@ -187,13 +201,20 @@ void capture(int startX, int startY, int endX, int endY)
     chrono::steady_clock::time_point now;
 
     chrono::steady_clock::time_point absoluteStart = std::chrono::high_resolution_clock::now();
+
+    HWND t = timeWindow->getHandle();
+    HDC hdcTime = GetDC(t);
+    RECT rect;
+    GetClientRect(t, &rect);
+    long long totalTime = 0;
+    string strTotalTime;
+
     while (true) {
 
         if (elapsed >= ms) {
             
             BitBlt(hdcMemDC, 0, 0, screenX, screenY, hdcScreen, startX, startY, SRCCOPY);
-
-            
+        
             Mat mat(screenY, screenX, CV_8UC4, pBits);
 
             Mat matBGR;
@@ -202,17 +223,24 @@ void capture(int startX, int startY, int endX, int endY)
             writer.write(matBGR);
             last = now;
             elapsed = 0;
+            
+            strTotalTime = to_string(totalTime) + "s / " + to_string(clipDuration-1) + "s";
+            DrawTextA(hdcTime, strTotalTime.c_str(), strTotalTime.length(), &rect, DT_CENTER | DT_VCENTER); 
         }
        
         now = std::chrono::high_resolution_clock::now();
         elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - last).count();
+        totalTime = std::chrono::duration_cast<std::chrono::seconds>(now - absoluteStart).count();
         
-        if (std::chrono::duration_cast<std::chrono::seconds>(now - absoluteStart).count() >= clipDuration)
+
+        if (!timeWindow->ProcessMessages())
+            break;
+        if (totalTime >= clipDuration)
             break;
         
     }
     
-    
+    ReleaseDC(t, hdcTime);
     DeleteObject(hBitmap);
     DeleteDC(hdcMemDC);
     ReleaseDC(hwnd, hdcScreen);
