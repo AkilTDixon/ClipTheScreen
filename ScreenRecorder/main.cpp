@@ -208,7 +208,7 @@ void capture(int startX, int startY, int endX, int endY, Window* timeWindow)
 
     
     double ms = (1.0 / (double)FPS) * 1000;
-    string videoName = "vid.mp4";
+    string videoName = outputPath+"vid.mp4";
     wstring wVideoName = L"vid.mp4";
     VideoWriter writer(videoName,
         VideoWriter::fourcc('H', '2', '6', '4'),
