@@ -10,6 +10,7 @@
 #include <openssl/hmac.h>
 #include <openssl/evp.h>
 #include <fstream>
+#include <filesystem>
 #include <map>
 #include "Window.h"
 using namespace std;
@@ -25,6 +26,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     return main();
 }
+
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     
     switch (msg)
@@ -73,7 +75,7 @@ int main() {
     p.y = 0;
 
 
-    Window wdo(L"CursorOverlay", WndProc, L"Overlay", WS_POPUP, 0, 0, GetSystemMetrics(SM_CXVIRTUALSCREEN), GetSystemMetrics(SM_CYVIRTUALSCREEN));
+    Window wdo(L"CursorOverlay", WndProc, L"Overlay", WS_POPUP, 0, 0, GetSystemMetrics(SM_CXVIRTUALSCREEN), GetSystemMetrics(SM_CYVIRTUALSCREEN), true);
     MSG msg;
 
     
@@ -105,7 +107,7 @@ int main() {
         
     }
     destroyAllWindows();
-    Window t(L"timer", WindowProc, L"Duration", WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, endP.x, endP.y, 50, 52);
+    Window t(L"timer", WindowProc, L"Duration", WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, endP.x, endP.y, 50, 52, true);
     capture(startP.x, startP.y, endP.x, endP.y, &t);
     t.~Window();
     return 0;
@@ -116,9 +118,10 @@ int main() {
 
 void capture(int startX, int startY, int endX, int endY, Window* timeWindow)
 {
-    map<string, int> config;
+    map<string, string> config;
     int FPS = 30;
     int clipDuration = 10;
+    string outputPath;
     ifstream f;
     string line;
 
@@ -127,15 +130,56 @@ void capture(int startX, int startY, int endX, int endY, Window* timeWindow)
     while (getline(f, line))
     {
         auto i = line.find("=");
-        auto integer = stoi(line.substr(i + 1, line.length() - 1));
+
+        auto value = line.substr(i + 1, line.length() - 1);
         
-        config[line.substr(0, i)] = integer;
+        config[line.substr(0, i)] = value;
     }
     f.close();
-    FPS = config["[fps]"];
-    clipDuration = config["[clipduration]"];
-    if (clipDuration < 1 || FPS < 1)
+    FPS = stoi(config["[fps]"]);
+    clipDuration = stoi(config["[clipduration]"]);
+    outputPath = config["[outputpath]"];
+
+
+    if (outputPath != "")
+        if (!filesystem::is_directory(outputPath))
+        {
+            Window error(L"error", WindowProc, L"ERROR", WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, startX, startY, 500, 100, false);
+            HWND e = error.getHandle();
+            HDC hdcTime = GetDC(e);
+            RECT rect;
+            GetClientRect(e, &rect);
+            string eMsg = "ERROR: Output Path doesn't exist (Check config.txt)";
+            DrawTextA(hdcTime, eMsg.c_str(), eMsg.length(), &rect, DT_CENTER | DT_VCENTER);
+            system("pause");
+            return;
+        }
+
+
+    if (clipDuration < 1)
+    {
+        Window error(L"error", WindowProc, L"ERROR", WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, startX, startY, 500, 100, false);
+        HWND e = error.getHandle();
+        HDC hdcTime = GetDC(e);
+        RECT rect;
+        GetClientRect(e, &rect);
+        string eMsg = "ERROR: Clip duration is less than 1 second (Check config.txt)";
+        DrawTextA(hdcTime, eMsg.c_str(), eMsg.length(), &rect, DT_CENTER | DT_VCENTER);
+        system("pause");
         return;
+    }
+    if (FPS < 1)
+    {
+        Window error(L"error", WindowProc, L"ERROR", WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, startX, startY, 500, 100, false);
+        HWND e = error.getHandle();
+        HDC hdcTime = GetDC(e);
+        RECT rect;
+        GetClientRect(e, &rect);
+        string eMsg = "ERROR: Target FPS is less than 1 frame per second (Check config.txt)";
+        DrawTextA(hdcTime, eMsg.c_str(), eMsg.length(), &rect, DT_CENTER | DT_VCENTER);
+        system("pause");
+        return;
+    }
 
 
     HWND hwnd = GetDesktopWindow();

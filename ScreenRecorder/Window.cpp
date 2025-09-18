@@ -46,7 +46,7 @@ Window::Window() : mInstance (GetModuleHandle(nullptr))
 
 }
 
-Window::Window(LPCWSTR className, WNDPROC lpfnWndProc, LPCWSTR title, DWORD s, int xCoord, int yCoord, int w, int h) : mInstance(GetModuleHandle(nullptr))
+Window::Window(LPCWSTR className, WNDPROC lpfnWndProc, LPCWSTR title, DWORD s, int xCoord, int yCoord, int w, int h, bool transparent) : mInstance(GetModuleHandle(nullptr))
 {
 
 	cName = className;
@@ -89,8 +89,10 @@ Window::Window(LPCWSTR className, WNDPROC lpfnWndProc, LPCWSTR title, DWORD s, i
 		NULL
 	);
 
-
-	SetLayeredWindowAttributes(mHandle, RGB(0, 0, 0), 128, LWA_ALPHA);
+	if (transparent)
+		SetLayeredWindowAttributes(mHandle, RGB(0, 0, 0), 128, LWA_ALPHA);
+	else
+		SetLayeredWindowAttributes(mHandle, RGB(0, 0, 0), 255, LWA_ALPHA);
 
 	ShowWindow(mHandle, SW_SHOW);
 

@@ -11,7 +11,7 @@ class Window
 public:
 	
 	Window();
-	Window(LPCWSTR className, WNDPROC lpfnWndProc, LPCWSTR title, DWORD s, int xCoord, int yCoord, int w, int h);
+	Window(LPCWSTR className, WNDPROC lpfnWndProc, LPCWSTR title, DWORD s, int xCoord, int yCoord, int w, int h, bool transparent);
 	~Window();
 
 	HWND getHandle();
