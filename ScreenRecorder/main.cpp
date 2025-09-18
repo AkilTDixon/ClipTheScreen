@@ -69,13 +69,23 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 }
 
 int main() {
+#ifdef _WIN32
+    SetProcessDPIAware();  
+#endif
+
+
     this_thread::sleep_for(chrono::seconds(1));
      
     p.x = 0;
     p.y = 0;
 
+    int width, height;
 
-    Window wdo(L"CursorOverlay", WndProc, L"Overlay", WS_POPUP, 0, 0, GetSystemMetrics(SM_CXVIRTUALSCREEN), GetSystemMetrics(SM_CYVIRTUALSCREEN), true);
+    width = GetSystemMetrics(SM_CXVIRTUALSCREEN);
+    height = GetSystemMetrics(SM_CYVIRTUALSCREEN);
+
+
+    Window wdo(L"CursorOverlay", WndProc, L"Overlay", WS_POPUP, 0, 0, width, height, true);
     MSG msg;
 
     
