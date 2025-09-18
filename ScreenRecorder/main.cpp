@@ -73,35 +73,10 @@ int main() {
     p.y = 0;
 
 
-
     Window wdo(L"CursorOverlay", WndProc, L"Overlay", WS_POPUP, 0, 0, GetSystemMetrics(SM_CXVIRTUALSCREEN), GetSystemMetrics(SM_CYVIRTUALSCREEN));
     MSG msg;
-    //HWND window = NULL;
-    //WNDCLASS wc = {};
-    //wc.lpfnWndProc = WndProc;
-    //wc.hInstance = GetModuleHandle(NULL);
-    //wc.lpszClassName = L"CursorOverlay";
-    //RegisterClass(&wc);
-    
-
-    //window = CreateWindowEx(
-    //    WS_EX_TOPMOST | WS_EX_LAYERED,
-    //    wc.lpszClassName, 
-    //    L"Overlay",
-    //    WS_POPUP, 
-    //    0, 
-    //    0, 
-    //    GetSystemMetrics(SM_CXVIRTUALSCREEN), 
-    //    GetSystemMetrics(SM_CYVIRTUALSCREEN),
-    //    NULL, 
-    //    NULL, 
-    //    wc.hInstance, 
-    //    NULL
-    //);
 
     
-    
-
     while (true)
     {
         while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
