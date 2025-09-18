@@ -1,8 +1,9 @@
 # ClipTheScreen
+**WORK-IN-PROGRESS**
 
 A Windows desktop application that allows users to select any portion of their screen and record it as a video. Perfect for creating quick screen recordings, tutorials, or capturing specific areas of your desktop.
 
-![Demo](https://github.com/user-attachments/assets/aac5846a-3968-43f3-abb5-20552059109c)
+https://github.com/user-attachments/assets/aac5846a-3968-43f3-abb5-20552059109c
 
 ## Features
 
@@ -138,3 +139,5 @@ Contributions are welcome! Please feel free to submit issues, feature requests, 
 - Cloud upload integration
 - GUI configuration interface
 - Hotkey support for quick recording
+
+
