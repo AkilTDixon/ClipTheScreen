@@ -139,3 +139,7 @@ Contributions are welcome! Please feel free to submit issues, feature requests, 
 - Cloud upload integration
 - GUI configuration interface
 - Hotkey support for quick recording
+
+
+https://github.com/user-attachments/assets/d16511f1-1a99-414c-a2b4-c6dca591819a
+
