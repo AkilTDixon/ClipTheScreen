@@ -152,7 +152,7 @@ void capture(int startX, int startY, int endX, int endY, Window* timeWindow)
 
 
     if (outputPath != "")
-        if (!filesystem::is_directory(outputPath))
+        if (!filesystem::is_directory(outputPath) || outputPath[outputPath.length()-1] != '\\')
         {
             Window error(L"error", WindowProc, L"ERROR", WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, startX, startY, 500, 100, false);
             HWND e = error.getHandle();
