@@ -1,6 +1,6 @@
 # ClipTheScreen
 
-A Windows desktop application that allows users to select any portion of their screen and record it as a video. Perfect for creating quick screen recordings, tutorials, or capturing specific areas of your desktop.
+A Windows desktop application that allows users to select any portion of their screen and record it as a video.
 
 https://github.com/user-attachments/assets/aac5846a-3968-43f3-abb5-20552059109c
 
@@ -10,7 +10,6 @@ https://github.com/user-attachments/assets/aac5846a-3968-43f3-abb5-20552059109c
 - **Multi-Monitor Support**: Works across multiple joined monitors
 - **Configurable Recording Settings**: Customize FPS and recording duration via configuration file
 - **Automatic Playback**: Automatically opens the recorded video after completion
-- **High Performance**: Optimized screen capture using Windows GDI and OpenCV
 
 ## How It Works
 
@@ -44,8 +43,6 @@ The application uses a `config.txt` file to control recording parameters:
 ### Dependencies
 - **OpenCV 4.x**: Computer vision library for video processing
 - **FFmpeg**: Video encoding/decoding (avcodec, avformat, avutil, swscale, swresample)
-- **libcurl**: HTTP client library (for potential upload functionality)
-- **OpenSSL**: Cryptographic functions
 - **Windows SDK**: For Windows API functions
 
 ## Building from Source
@@ -55,24 +52,6 @@ The application uses a `config.txt` file to control recording parameters:
 - vcpkg package manager
 - Windows 10 SDK
 
-### Build Steps
-
-1. **Install dependencies via vcpkg**:
-   ```bash
-   vcpkg install opencv4:x64-windows
-   vcpkg install curl:x64-windows
-   vcpkg install openssl:x64-windows
-   ```
-
-2. **Open the solution**:
-   - Open `ScreenRecorder.sln` in Visual Studio
-
-3. **Build the project**:
-   - Select Release|x64 configuration
-   - Build → Build Solution
-
-4. **Run the executable**:
-   - The built executable will be in `x64/Release/ScreenRecorder.exe`
 
 ## Project Structure
 
@@ -111,7 +90,7 @@ ClipTheScreen/
 - **File Location**: Videos are saved in the same directory as the executable
 
 ## Troubleshooting
-
+https://github.com/AkilTDixon
 ### Common Issues
 - **"Missing DLL" errors**: Ensure all required DLLs are in the same directory as the executable
 - **Poor performance**: Try reducing the FPS setting in `config.txt`
@@ -124,20 +103,6 @@ The following DLLs must be present alongside the executable:
 - `libcurl*.dll` (libcurl library)
 - `libcrypto*.dll` (OpenSSL library)
 
-## License
 
-This project is licensed under the terms specified in the LICENSE file.
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit issues, feature requests, or pull requests.
-
-## Future Enhancements
-
-- Audio recording support
-- Multiple output formats
-- Cloud upload integration
-- GUI configuration interface
-- Hotkey support for quick recording
 
 
