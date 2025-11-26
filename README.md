@@ -91,7 +91,7 @@ ClipTheScreen/
 
 ## Troubleshooting
 https://github.com/AkilTDixon
-### Common Issues
+### Notes
 - **"Missing DLL" errors**: Ensure all required DLLs are in the same directory as the executable
 - **Poor performance**: Try reducing the FPS setting in `config.txt`
 - **Large file sizes**: Consider lowering the FPS or reducing the recording duration
